@@ -1,0 +1,14 @@
+{
+    "name": "displaynone/movie-thumbnailer",
+    "description": "Nautilus Movie Thumbnailer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Luis Sacristán",
+            "email": "displaynone@gmail.com"
+        }
+    ],
+    "require": {
+        "imangazaliev/didom": "^1.16"
+    }
+}
