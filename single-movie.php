@@ -19,7 +19,12 @@ function get_image( $movie_url ) {
 	$movie_link = 'https://www.imdb.com' . $movie_url;
 	$document = new Document( $movie_link, true);
 
-	$image = $document->find( '.poster img' );
+	// New iMDb design
+	$image = $document->find( 'img.ipc-image' );
+	if ( empty( $image ) ) {
+		// Previous design
+		$image = $document->find( '.poster img' );
+	}
 
 	$imageURL = $image[0]->attr( 'src' );
 	echo "This is the image selected:\n$imageURL\n";
