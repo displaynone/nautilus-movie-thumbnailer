@@ -6,8 +6,21 @@ require_once( __DIR__ . '/vendor/autoload.php');
 use DiDom\Document;
 use DiDom\Query;
 
+
 define( 'REGEXP_TITLE', '/\/([^\/]*)\.(mp4|mpg|mkv|wmv|flv|avi)$/' );
 define( 'CACHE_DIR', $_SERVER['HOME'] . '/.cache/thumbnails/large/' );
+
+function get_url( $url ) {
+	$agent= 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)';
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_VERBOSE, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	$result=curl_exec($ch);
+	return $result;
+}
 
 function xpath_translate( $text ) {
 	return "translate($text,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')";
@@ -17,7 +30,7 @@ function get_image( $movie_url ) {
 	global $selected_file;
 
 	$movie_link = 'https://www.imdb.com' . $movie_url;
-	$document = new Document( $movie_link, true);
+	$document = new Document( get_url( $movie_link ) );
 
 	// New iMDb design
 	$image = $document->find( 'img.ipc-image' );
@@ -34,7 +47,7 @@ function get_image( $movie_url ) {
 }
 
 function search_title( $title ) {
-	$document = new Document( "https://www.imdb.com/find?q=$title&s=tt&ref_=fn_al_tt_mr", true);
+	$document = new Document( get_url( "https://www.imdb.com/find?s=tt&q=$title&ref_=nv_sr_sm" ) );
 	// $movies = $document->find( "//tr[contains(@class, 'findResult')][.//td//*[contains(" . xpath_translate('text()') . ", \"$unescape_title\")]]", Query::TYPE_XPATH );
 	$movies = $document->find( "//tr[contains(@class, 'findResult')][.//td]", Query::TYPE_XPATH );
 
@@ -58,6 +71,7 @@ function search_title( $title ) {
 
 $selected_file = trim( $_SERVER[ 'NAUTILUS_SCRIPT_SELECTED_URIS' ] );
 
+echo $selected_file;
 $ch = curl_init();
 
 preg_match( REGEXP_TITLE, $selected_file, $m );
