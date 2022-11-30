@@ -48,8 +48,7 @@ function get_image( $movie_url ) {
 
 function search_title( $title ) {
 	$document = new Document( get_url( "https://www.imdb.com/find?s=tt&q=$title&ref_=nv_sr_sm" ) );
-	// $movies = $document->find( "//tr[contains(@class, 'findResult')][.//td//*[contains(" . xpath_translate('text()') . ", \"$unescape_title\")]]", Query::TYPE_XPATH );
-	$movies = $document->find( "//tr[contains(@class, 'findResult')][.//td]", Query::TYPE_XPATH );
+	$movies = $document->find( "//li[contains(@class, 'find-result-item')]//a", Query::TYPE_XPATH );
 
 	if ( $movies ) {
 		echo "These are the movies found in iMDb:\n\n";
@@ -62,8 +61,10 @@ function search_title( $title ) {
 			$new_title = readline( 'Enter movie title: ' );
 			search_title( str_replace( ' ', '%20', $new_title ) );
 		} else {
-			$page_link = $document->find( '.result_text a' );
-			$movie_url = $page_link[ $option ]->attr( 'href' );
+			// $page_link = $document->find( '.result_text a' );
+			echo $movies[ $option ];
+			$movie_url = $movies[ $option ]->attr( 'href' );
+			echo "\n\n$movie_url\n\n";
 			get_image( $movie_url );
 		}
 	}
