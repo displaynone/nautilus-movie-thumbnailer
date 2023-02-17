@@ -47,7 +47,7 @@ function get_image( $movie_url ) {
 }
 
 function search_title( $title ) {
-	$document = new Document( get_url( "https://www.imdb.com/find?s=tt&q=$title&ref_=nv_sr_sm" ) );
+	$document = new Document( get_url( "https://www.imdb.com/find/?s=tt&q=$title&ref_=nv_sr_sm" ) );
 	$movies = $document->find( "//li[contains(@class, 'find-result-item')]//a", Query::TYPE_XPATH );
 
 	if ( $movies ) {
