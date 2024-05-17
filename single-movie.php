@@ -29,26 +29,21 @@ function xpath_translate( $text ) {
 function get_image( $movie_url ) {
 	global $selected_file;
 
-	$movie_link = 'https://www.imdb.com' . $movie_url;
+	$movie_link = 'https://www.themoviedb.org' . $movie_url;
 	$document = new Document( get_url( $movie_link ) );
 
-	// New iMDb design
-	$image = $document->find( 'img.ipc-image' );
-	if ( empty( $image ) ) {
-		// Previous design
-		$image = $document->find( '.poster img' );
-	}
+	$image = $document->find( 'img.poster.w-full' );
 
 	$imageURL = $image[0]->attr( 'src' );
 	echo "This is the image selected:\n$imageURL\n";
 	$hash = md5( $selected_file );
 	imagepng( imagecreatefromstring( file_get_contents( $imageURL ) ), CACHE_DIR . $hash . '.png' );
-	// readline( "Press enter to close" );
+	readline( "Press enter to close" );
 }
 
 function search_title( $title ) {
-	$document = new Document( get_url( "https://www.imdb.com/find/?s=tt&q=$title&ref_=nv_sr_sm" ) );
-	$movies = $document->find( "//li[contains(@class, 'find-result-item')]//a", Query::TYPE_XPATH );
+	$document = new Document( get_url( "https://www.themoviedb.org/search?query=$title&language=en-US" ) );
+	$movies = $document->find( "//div[contains(@class, 'movie')]//div[contains(@class, 'title')]//a[contains(@class, 'result')]", Query::TYPE_XPATH );
 
 	if ( $movies ) {
 		echo "These are the movies found in iMDb:\n\n";
