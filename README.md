@@ -10,6 +10,7 @@ There are 2 scripts:
 
 - `several-movies.php`: it loads the first movie found depending on the file name.
 - `single-movie.php`: it searchs for the title in iMDb, then list 10 results and after selecting the match, it loads the poster. In case the film is not listed, it allows the user to search for it manually.
+- `refresh-video.php`: refresh local videos thumbs using `ffmpeg`, it works with samba files too.
 
 ## Install
 
